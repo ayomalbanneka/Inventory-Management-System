@@ -65,7 +65,7 @@ public class LoginScreen extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Warehouse Inventory Management System");
+        setTitle("Inventura Warehouse Inventory Management System");
         setResizable(false);
 
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
@@ -74,7 +74,7 @@ public class LoginScreen extends javax.swing.JFrame {
         logo.setOpaque(true);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel3.setText("Warehouse");
+        jLabel3.setText("Inventura Warehouse");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Username");
@@ -84,7 +84,7 @@ public class LoginScreen extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Password");
 
-        passwordInput.setText("123456");
+        passwordInput.setText("Ayomal@123");
 
         signInBtn.setBackground(new java.awt.Color(0, 0, 0));
         signInBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
