@@ -345,7 +345,7 @@ public class stockPanel extends javax.swing.JPanel {
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-            JasperExportManager.exportReportToPdfFile(fileReport, timestamp + "_stock_in_report_report.pdf");
+            JasperExportManager.exportReportToPdfFile(fileReport, timestamp + "_stock_in_report.pdf");
 
         } catch (JRException e) {
             e.printStackTrace();
