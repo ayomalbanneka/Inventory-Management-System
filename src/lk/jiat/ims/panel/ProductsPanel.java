@@ -39,23 +39,23 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author Ayoma
  */
 public class ProductsPanel extends javax.swing.JPanel {
-    
+
     ResultSet user;
-    
+
     public ProductsPanel(ResultSet admin) {
         initComponents();
         loadTabelData();
         init();
         user = admin;
     }
-    
-    private void loadTabelData(){
+
+    private void loadTabelData() {
         try {
 
-            ResultSet rs = MySQL.execute("SELECT * FROM products\n" +
-            "INNER JOIN category ON category.id = products.category_id\n" +
-            "INNER JOIN suppliers ON suppliers.id = products.suppliers_id\n" +
-            "INNER JOIN users ON users.id = products.users_id");
+            ResultSet rs = MySQL.execute("SELECT * FROM products\n"
+                    + "INNER JOIN category ON category.id = products.category_id\n"
+                    + "INNER JOIN suppliers ON suppliers.id = products.suppliers_id\n"
+                    + "INNER JOIN users ON users.id = products.users_id");
 
             DefaultTableModel dtm = (DefaultTableModel) productsTable.getModel();
             dtm.setRowCount(0);
@@ -79,17 +79,17 @@ public class ProductsPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
-    
-    private void init(){
+
+    private void init() {
         reportBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/printer.svg", 20, 20));
-        
+
         TableColumn actionColumn = productsTable.getColumn("Action");
         actionColumn.setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                     boolean isSelected, boolean hasFocus, int row, int column) {
                 JButton btn = new JButton();
-                btn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg",25,25));
+                btn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
                 btn.setForeground(Color.BLACK);
                 btn.setBackground(Color.WHITE);
                 btn.setBorder(null);
@@ -103,7 +103,7 @@ public class ProductsPanel extends javax.swing.JPanel {
             JButton button = new JButton();
 
             {
-                button.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg",25,25));
+                button.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
                 button.addActionListener(e -> {
                     int row = productsTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
@@ -120,7 +120,7 @@ public class ProductsPanel extends javax.swing.JPanel {
                 return button;
             }
         });
-        
+
     }
 
     /**
@@ -231,14 +231,14 @@ public class ProductsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Frame parent = (Frame)SwingUtilities.getWindowAncestor(ProductsPanel.this);
+        Frame parent = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
         productRegistrationDialog productRegistrationDialog = new productRegistrationDialog(parent, true, user);
         productRegistrationDialog.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void reportBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportBtnActionPerformed
         try {
-            InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/stock_in_report.jasper");
+            InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/product_report.jasper");
 
             HashMap<String, Object> parameters = new HashMap<>();
 
@@ -253,6 +253,7 @@ public class ProductsPanel extends javax.swing.JPanel {
         } catch (JRException e) {
             e.printStackTrace();
         }
+
     }//GEN-LAST:event_reportBtnActionPerformed
 
 
