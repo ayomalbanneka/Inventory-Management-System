@@ -107,7 +107,7 @@ public class HomeScreen extends javax.swing.JFrame {
         profileLogo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Warehouse Inventory Management System");
+        setTitle("Inventura Warehouse Inventory Management System");
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
