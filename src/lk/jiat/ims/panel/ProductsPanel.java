@@ -148,7 +148,7 @@ public class ProductsPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Name", "Quatity", "Price", "Description", "Category", "Supplier", "User", "Action"
+                "ID", "Name", "Quantity", "Price", "Description", "Category", "Supplier", "User", "Action"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -239,9 +239,9 @@ public class ProductsPanel extends javax.swing.JPanel {
     private void reportBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportBtnActionPerformed
         try {
             InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/product_report.jasper");
-
+            
             HashMap<String, Object> parameters = new HashMap<>();
-
+            
             JRTableModelDataSource jrTableModelDataSource = new JRTableModelDataSource(productsTable.getModel());
             JasperPrint fileReport = JasperFillManager.fillReport(filePath, parameters, jrTableModelDataSource);
             JasperViewer.viewReport(fileReport, false);
