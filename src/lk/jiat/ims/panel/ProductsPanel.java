@@ -248,7 +248,7 @@ public class ProductsPanel extends javax.swing.JPanel {
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-            JasperExportManager.exportReportToPdfFile(fileReport, timestamp + "products_report.pdf");
+            JasperExportManager.exportReportToPdfFile(fileReport, timestamp + "_products_report.pdf");
 
         } catch (JRException e) {
             e.printStackTrace();
