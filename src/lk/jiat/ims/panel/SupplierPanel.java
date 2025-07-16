@@ -9,51 +9,62 @@ import java.awt.Frame;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Vector;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import lk.jiat.ims.gui.connection.MySQL;
 import lk.jiat.ims.gui.dialog.supplierDialog;
+
 /**
  *
  * @author Ayoma
  */
 public class SupplierPanel extends javax.swing.JPanel {
 
-    
+    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
+
+    static {
+        try {
+            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            handler.setFormatter(new SimpleFormatter());
+            loggers.addHandler(handler);
+            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
+        } catch (Exception e) {
+            loggers.log(Level.SEVERE, e.toString());
+        }
+    }
+
     public SupplierPanel() {
         initComponents();
-        init();
         loadTabelData();
     }
-    
-    private void init(){
-        editBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 20, 20));
-        removeBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/cross.svg", 20, 20));
-    }
-    
-    private void loadTabelData(){
+
+    private void loadTabelData() {
         try {
             ResultSet rs = MySQL.execute("SELECT * FROM `suppliers`");
-            
+
             DefaultTableModel dtm = (DefaultTableModel) supplierTable.getModel();
             dtm.setRowCount(0);
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 Vector<String> data = new Vector();
                 data.add(rs.getString("id"));
                 data.add(rs.getString("supplier_name"));
                 data.add(rs.getString("phone"));
                 data.add(rs.getString("email"));
                 data.add(rs.getString("address"));
-                
+
                 dtm.addRow(data);
-                
+
             }
-            
+
+            loggers.info("Supplier data loaded successfully into the table");
+
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            loggers.log(Level.SEVERE, "Failed to load supplier data", ex);
         }
     }
 
@@ -70,8 +81,6 @@ public class SupplierPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         supplierTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        editBtn = new javax.swing.JButton();
-        removeBtn = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -107,16 +116,6 @@ public class SupplierPanel extends javax.swing.JPanel {
             }
         });
 
-        editBtn.setBackground(new java.awt.Color(0, 255, 0));
-        editBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        editBtn.setForeground(new java.awt.Color(0, 0, 0));
-        editBtn.setText("Edit");
-
-        removeBtn.setBackground(new java.awt.Color(255, 0, 0));
-        removeBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        removeBtn.setForeground(new java.awt.Color(255, 255, 255));
-        removeBtn.setText("Remove");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,10 +129,7 @@ public class SupplierPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel1)
                                 .addGap(0, 638, Short.MAX_VALUE))
                             .addComponent(jScrollPane1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(removeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(88, 88, 88))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -146,32 +142,26 @@ public class SupplierPanel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(editBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(removeBtn))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Frame parent = (Frame)SwingUtilities.getWindowAncestor(SupplierPanel.this);
+        Frame parent = (Frame) SwingUtilities.getWindowAncestor(SupplierPanel.this);
         supplierDialog supplierRegistration = new supplierDialog(parent, true);
         supplierRegistration.setVisible(true);
+
+        loggers.info("Supplier data loaded successfully into the table");
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton editBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton removeBtn;
     private javax.swing.JTable supplierTable;
     // End of variables declaration//GEN-END:variables
 }

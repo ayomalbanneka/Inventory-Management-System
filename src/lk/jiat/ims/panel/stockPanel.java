@@ -30,6 +30,10 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 
@@ -38,6 +42,19 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
  * @author Ayoma
  */
 public class stockPanel extends javax.swing.JPanel {
+
+    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
+
+    static {
+        try {
+            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            handler.setFormatter(new SimpleFormatter());
+            loggers.addHandler(handler);
+            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
+        } catch (Exception e) {
+            loggers.log(Level.SEVERE, e.toString());
+        }
+    }
 
     /**
      * Creates new form stockPanel
@@ -77,6 +94,9 @@ public class stockPanel extends javax.swing.JPanel {
                     int row = stockInTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(stockPanel.this);
                     Object productId = stockInTable.getValueAt(row, 0);
+
+                    loggers.info("Stock in table updated product ID: " + productId);
+
                     stockUpdateDialog stockUpdateDialog = new stockUpdateDialog(parentFrame, true, productId);
                     stockUpdateDialog.setVisible(true);
                     fireEditingStopped();
@@ -117,6 +137,9 @@ public class stockPanel extends javax.swing.JPanel {
                     int row = stockOutTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(stockPanel.this);
                     Object productId = stockOutTable.getValueAt(row, 0);
+
+                    loggers.info("Stock in table updated product ID: " + productId);
+
                     stockUpdateDialog stockUpdateDialog = new stockUpdateDialog(parentFrame, true, productId);
                     stockUpdateDialog.setVisible(true);
                     fireEditingStopped();
@@ -158,6 +181,8 @@ public class stockPanel extends javax.swing.JPanel {
                 dtm1.addRow(data);
             }
 
+            loggers.info("Stock out table data loaded successfully");
+
             DefaultTableModel dtm2 = (DefaultTableModel) stockInTable.getModel();
             while (rs2.next()) {
                 Vector<String> data2 = new Vector();
@@ -171,6 +196,8 @@ public class stockPanel extends javax.swing.JPanel {
                 dtm2.addRow(data2);
 
             }
+
+            loggers.info("Stock out table data loaded successfully");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -344,11 +371,13 @@ public class stockPanel extends javax.swing.JPanel {
             JasperViewer.viewReport(fileReport, false);
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String reportFileName = timestamp + "_stock_in_report.pdf";
 
-            JasperExportManager.exportReportToPdfFile(fileReport, timestamp + "_stock_in_report.pdf");
+            JasperExportManager.exportReportToPdfFile(fileReport, reportFileName);
+            loggers.info("Generated and exported report: " + reportFileName);
 
         } catch (JRException e) {
-            e.printStackTrace();
+            loggers.log(Level.SEVERE, "Report generation failed", e);
         }
     }//GEN-LAST:event_stockInReportBtnActionPerformed
 
@@ -363,11 +392,13 @@ public class stockPanel extends javax.swing.JPanel {
             JasperViewer.viewReport(fileReport, false);
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String reportFileName = timestamp + "_stock_out_report.pdf";
 
-            JasperExportManager.exportReportToPdfFile(fileReport, timestamp + "_stock_out_report.pdf");
+            JasperExportManager.exportReportToPdfFile(fileReport, reportFileName);
+            loggers.info("Generated and exported report: " + reportFileName);
 
         } catch (JRException e) {
-            e.printStackTrace();
+            loggers.log(Level.SEVERE, "Report generation failed", e);
         }
     }//GEN-LAST:event_stockOutReportBtnActionPerformed
 

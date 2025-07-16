@@ -12,6 +12,10 @@ import java.awt.Frame;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Vector;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -29,6 +33,19 @@ import lk.jiat.ims.gui.dialog.userUpdateDialog;
  * @author Ayoma
  */
 public class UsersPanel extends javax.swing.JPanel {
+
+    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
+
+    static {
+        try {
+            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            handler.setFormatter(new SimpleFormatter());
+            loggers.addHandler(handler);
+            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
+        } catch (Exception e) {
+            loggers.log(Level.SEVERE, e.toString());
+        }
+    }
 
     private String userId;
 
@@ -59,6 +76,8 @@ public class UsersPanel extends javax.swing.JPanel {
                 dtm.addRow(data);
 
             }
+
+            loggers.info(" users data loaded successfully into the table");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,6 +111,9 @@ public class UsersPanel extends javax.swing.JPanel {
                     int row = userTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
                     Object userID = userTable.getValueAt(row, 0);
+
+                    loggers.info("Edited user with ID: " + userID);
+
                     userUpdateDialog userUpdateDialog = new userUpdateDialog(parentFrame, true, userID);
                     userUpdateDialog.setVisible(true);
                     fireEditingStopped();
@@ -185,7 +207,7 @@ public class UsersPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        Frame parent = (Frame)SwingUtilities.getWindowAncestor(UsersPanel.this);
+        Frame parent = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
         userDialog productRegistrationDialog = new userDialog(parent, true);
         productRegistrationDialog.setVisible(true);
     }//GEN-LAST:event_addBtnActionPerformed
