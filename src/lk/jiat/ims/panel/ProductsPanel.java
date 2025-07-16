@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Frame;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,6 +34,10 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import java.util.logging.Logger;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.Level;
 
 /**
  *
@@ -47,6 +52,19 @@ public class ProductsPanel extends javax.swing.JPanel {
         loadTabelData();
         init();
         user = admin;
+    }
+
+    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
+
+    static {
+        try {
+            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            handler.setFormatter(new SimpleFormatter());
+            loggers.addHandler(handler);
+            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
+        } catch (Exception e) {
+            loggers.log(Level.SEVERE, e.toString());
+        }
     }
 
     private void loadTabelData() {
@@ -75,8 +93,10 @@ public class ProductsPanel extends javax.swing.JPanel {
 
             }
 
+            loggers.info("Loaded product data successfully into the table");
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            loggers.log(Level.SEVERE, "Failed to load product data", e);
         }
     }
 
@@ -108,6 +128,9 @@ public class ProductsPanel extends javax.swing.JPanel {
                     int row = productsTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
                     Object productId = productsTable.getValueAt(row, 0);
+
+                    loggers.info("Edited product with ID: " + productId);
+
                     productUpdateDialog productDialog = new productUpdateDialog(parentFrame, true, productId);
                     productDialog.setVisible(true);
                     fireEditingStopped();
@@ -136,7 +159,7 @@ public class ProductsPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         productsTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        addNewProductBtn = new javax.swing.JButton();
         reportBtn = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -162,13 +185,13 @@ public class ProductsPanel extends javax.swing.JPanel {
         productsTable.setRowHeight(40);
         jScrollPane1.setViewportView(productsTable);
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 255));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("+ Add new products");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addNewProductBtn.setBackground(new java.awt.Color(0, 0, 255));
+        addNewProductBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addNewProductBtn.setForeground(new java.awt.Color(255, 255, 255));
+        addNewProductBtn.setText("+ Add new products");
+        addNewProductBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addNewProductBtnActionPerformed(evt);
             }
         });
 
@@ -198,7 +221,7 @@ public class ProductsPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(addNewProductBtn)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -207,7 +230,7 @@ public class ProductsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(11, 11, 11)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(addNewProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
@@ -230,35 +253,44 @@ public class ProductsPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void addNewProductBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewProductBtnActionPerformed
+
+        loggers.info("Add new product button clicked");
+
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
         productRegistrationDialog productRegistrationDialog = new productRegistrationDialog(parent, true, user);
         productRegistrationDialog.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_addNewProductBtnActionPerformed
 
     private void reportBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportBtnActionPerformed
+
+        loggers.info("Report button clicked");
+
         try {
             InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/product_report.jasper");
-            
+
             HashMap<String, Object> parameters = new HashMap<>();
-            
+
             JRTableModelDataSource jrTableModelDataSource = new JRTableModelDataSource(productsTable.getModel());
             JasperPrint fileReport = JasperFillManager.fillReport(filePath, parameters, jrTableModelDataSource);
             JasperViewer.viewReport(fileReport, false);
 
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String reportFileName = timestamp + "_products_report.pdf";
 
-            JasperExportManager.exportReportToPdfFile(fileReport, timestamp + "_products_report.pdf");
+            JasperExportManager.exportReportToPdfFile(fileReport, reportFileName);
+
+            loggers.info("Generated and exported report: " + reportFileName);
 
         } catch (JRException e) {
-            e.printStackTrace();
+            loggers.log(Level.SEVERE, "Report generation failed", e);
         }
 
     }//GEN-LAST:event_reportBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton addNewProductBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

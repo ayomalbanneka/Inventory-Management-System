@@ -7,8 +7,10 @@ package lk.jiat.ims.panel;
 import lk.jiat.ims.gui.connection.MySQL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
@@ -16,39 +18,51 @@ import java.util.logging.Logger;
  */
 public class DashboardPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form DashboardPanel
-     */
+    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
+
+    static {
+        try {
+            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            handler.setFormatter(new SimpleFormatter());
+            loggers.addHandler(handler);
+            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
+        } catch (Exception e) {
+            loggers.log(Level.SEVERE, e.toString());
+        }
+    }
+    
     public DashboardPanel() {
         initComponents();
         loadData();
     }
-    
-    private void loadData(){
+
+    private void loadData() {
         try {
             ResultSet totalProducts = MySQL.execute("SELECT COUNT(id) AS total_product_count FROM products");
             ResultSet totalSuppliers = MySQL.execute("SELECT COUNT(id) AS total_supplier_count FROM suppliers");
             ResultSet totalStockIn = MySQL.execute("SELECT COUNT(quantity) AS total_stockIn_count FROM products WHERE quantity > 0");
             ResultSet totalStockOut = MySQL.execute("SELECT COUNT(quantity) AS total_stockOut_count FROM products WHERE quantity = 0");
-            
-            while(totalProducts.next()){
-               totalProductLabel.setText(totalProducts.getString("total_product_count"));
+
+            while (totalProducts.next()) {
+                totalProductLabel.setText(totalProducts.getString("total_product_count"));
             }
-            
-            while(totalSuppliers.next()){
+
+            while (totalSuppliers.next()) {
                 supplierCountLabel.setText(totalSuppliers.getString("total_supplier_count"));
             }
-            
-            while(totalStockIn.next()){
+
+            while (totalStockIn.next()) {
                 stockInLabel.setText(totalStockIn.getString("total_stockIn_count"));
             }
-            
-            while(totalStockOut.next()){
+
+            while (totalStockOut.next()) {
                 stockOutLabel.setText(totalStockOut.getString("total_stockOut_count"));
             }
-            
+
+            loggers.info("Data loaded successfully");
+
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            loggers.log(Level.SEVERE, "Data loading failed", ex);
         }
     }
 
@@ -75,9 +89,6 @@ public class DashboardPanel extends javax.swing.JPanel {
         jPanel7 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         stockOutLabel = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -229,14 +240,6 @@ public class DashboardPanel extends javax.swing.JPanel {
 
         jPanel3.add(jPanel7);
 
-        jPanel8.setLayout(new java.awt.GridLayout(1, 2, 3, 3));
-
-        jButton2.setText("Database Backup");
-        jPanel8.add(jButton2);
-
-        jButton3.setText("Databbase Restore");
-        jPanel8.add(jButton3);
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -245,12 +248,7 @@ public class DashboardPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(34, 34, 34)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(95, 95, 95)
-                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
                     .addGap(34, 34, 34)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -260,9 +258,7 @@ public class DashboardPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(98, 98, 98)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(98, Short.MAX_VALUE)))
+                    .addContainerGap(152, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -279,8 +275,6 @@ public class DashboardPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -291,7 +285,6 @@ public class DashboardPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel stockInLabel;
     private javax.swing.JLabel stockOutLabel;
     private javax.swing.JLabel supplierCountLabel;
