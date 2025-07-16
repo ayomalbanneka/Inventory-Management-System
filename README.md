@@ -35,6 +35,18 @@ This is a Java-based Inventory Management System project. It provides tools for 
 - MySQL (for database backend)
 - NetBeans IDE (recommended for development)
 
+## Setup
+
+1. **Clone the repository**  
+   Download or clone the project to your local machine.
+
+2. **Install dependencies**  
+   Ensure all required JARs are present in the `lib/` directory.
+
+3. **Configure the database**  
+   - Create a MySQL database for the application.
+   - Update database connection settings in the source code or configuration files as needed.
+
 ## Building the Project
 
 To build the project, run the following command in the project root:
@@ -63,6 +75,37 @@ ant test
 
 Test results will be available in the `build/test/results/` directory.
 
+<!-- ## Continuous Integration
+
+You can automate builds and tests using GitHub Actions.  
+Add a workflow file like `.github/workflows/ci.yml`:
+
+```yaml
+name: Java CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+      - name: Build with Ant
+        run: ant clean build
+      - name: Run tests
+        run: ant test
+``` -->
+
 ## Customization
 
 You can customize build steps by editing [build.xml](build.xml) or overriding targets as described in the comments within the file.
@@ -81,4 +124,4 @@ All dependencies are located in the [lib/](lib/) directory.
 
 ## License
 
-This project is provided as-is for educational purposes.
+This project is provided as-is for educational
