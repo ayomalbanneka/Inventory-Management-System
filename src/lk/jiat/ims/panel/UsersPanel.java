@@ -8,6 +8,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -19,13 +20,15 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import lk.jiat.ims.gui.connection.MySQL;
-import lk.jiat.ims.gui.dialog.userDialog;
+import lk.jiat.ims.gui.dialog.userRegistrationDialog;
 import lk.jiat.ims.gui.dialog.userUpdateDialog;
 
 /**
@@ -38,7 +41,7 @@ public class UsersPanel extends javax.swing.JPanel {
 
     static {
         try {
-            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            FileHandler handler = new FileHandler("app.log", 0, 1, true);
             handler.setFormatter(new SimpleFormatter());
             loggers.addHandler(handler);
             loggers.setUseParentHandlers(false); // prevent console + duplicate logging
@@ -91,31 +94,71 @@ public class UsersPanel extends javax.swing.JPanel {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                     boolean isSelected, boolean hasFocus, int row, int column) {
-                JButton btn = new JButton();
-                btn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
-                btn.setForeground(Color.BLACK);
-                btn.setBackground(Color.WHITE);
-                btn.setBorder(null);
-                btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                btn.setFocusPainted(false);
-                return btn;
+
+                JPanel panel = new JPanel();
+                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+                panel.setBackground(Color.WHITE);
+
+                // Edit Button
+                JButton editBtn = new JButton();
+                editBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 20, 20));
+                editBtn.setBackground(Color.WHITE);
+                editBtn.setBorder(null);
+                editBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                editBtn.setFocusPainted(false);
+
+                // Delete Button
+                JButton deleteBtn = new JButton();
+                deleteBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/delete.svg", 20, 20));
+                deleteBtn.setBackground(Color.WHITE);
+                deleteBtn.setBorder(null);
+                deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                deleteBtn.setFocusPainted(false);
+
+                panel.add(editBtn);
+                panel.add(deleteBtn);
+
+                return panel;
             }
         });
 
         actionColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()) {
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+            JButton editButton = new JButton(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 20, 20));
+            JButton deleteButton = new JButton(new FlatSVGIcon("lk/jiat/ims/img/delete.svg", 20, 20));
             JButton button = new JButton();
 
             {
-                button.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
-                button.addActionListener(e -> {
+
+                panel.setBackground(Color.WHITE);
+                panel.add(editButton);
+                panel.add(deleteButton);
+
+                // Edit action
+                editButton.addActionListener(e -> {
                     int row = userTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
                     Object userID = userTable.getValueAt(row, 0);
-
                     loggers.info("Edited user with ID: " + userID);
 
-                    userUpdateDialog userUpdateDialog = new userUpdateDialog(parentFrame, true, userID);
-                    userUpdateDialog.setVisible(true);
+                    userUpdateDialog dialog = new userUpdateDialog(parentFrame, true, userID);
+                    dialog.setVisible(true);
+                    fireEditingStopped();
+                });
+
+                // Delete action
+                deleteButton.addActionListener(e -> {
+                    int row = userTable.getSelectedRow();
+                    Object userID = userTable.getValueAt(row, 0);
+                    int confirm = JOptionPane.showConfirmDialog(userTable, "Delete user ID " + userID + "?", "Confirm", JOptionPane.YES_NO_OPTION);
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        loggers.info("Deleted user with ID: " + userID);
+                        try {
+                            ResultSet rs = MySQL.execute("DELETE FROM `users` WHERE `id` = '" + userID + "'");
+                        } catch (SQLException ex) {
+                            loggers.info("User not deleted" + ex);
+                        }
+                    }
                     fireEditingStopped();
                 });
             }
@@ -123,7 +166,7 @@ public class UsersPanel extends javax.swing.JPanel {
             @Override
             public Component getTableCellEditorComponent(JTable table, Object value,
                     boolean isSelected, int row, int column) {
-                return button;
+                return panel;
             }
         });
     }
@@ -208,7 +251,7 @@ public class UsersPanel extends javax.swing.JPanel {
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
-        userDialog productRegistrationDialog = new userDialog(parent, true);
+        userRegistrationDialog productRegistrationDialog = new userRegistrationDialog(parent, true);
         productRegistrationDialog.setVisible(true);
     }//GEN-LAST:event_addBtnActionPerformed
 
