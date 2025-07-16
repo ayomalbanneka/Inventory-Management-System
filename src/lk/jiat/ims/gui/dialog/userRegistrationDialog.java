@@ -7,19 +7,33 @@ package lk.jiat.ims.gui.dialog;
 import lk.jiat.ims.gui.connection.MySQL;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import lk.jiat.ims.panel.ProductsPanel;
+import lk.jiat.ims.util.validate.Validator;
 
 /**
  *
  * @author Ayoma
  */
-public class userDialog extends javax.swing.JDialog {
+public class userRegistrationDialog extends javax.swing.JDialog {
 
-    /**
-     * Creates new form productDialog
-     */
-    public userDialog(java.awt.Frame parent, boolean modal) {
+    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
+
+    static {
+        try {
+            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            handler.setFormatter(new SimpleFormatter());
+            loggers.addHandler(handler);
+            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
+        } catch (Exception e) {
+            loggers.log(Level.SEVERE, e.toString());
+        }
+    }
+    
+    public userRegistrationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -143,12 +157,19 @@ public class userDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+
+        if (!Validator.isPasswordValid(password.getText())) {
+            return;
+        }
+
         try {
             ResultSet rs = MySQL.execute("INSERT INTO `users` (`username`,`password`,`full_name`,`role`,`status_id`)"
-                    + "VALUES('"+Username.getText()+"','"+password.getText()+"','"+fullName.getText()+"','"+roleComboBox.getSelectedItem()+"','3')");
+                    + "VALUES('" + Username.getText() + "','" + password + "','" + fullName.getText() + "','" + roleComboBox.getSelectedItem() + "','3')");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+           loggers.info("User not regesitered" + ex);
         }
+
+
     }//GEN-LAST:event_registerBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

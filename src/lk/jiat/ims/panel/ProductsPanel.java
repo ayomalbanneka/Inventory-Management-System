@@ -8,6 +8,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,8 @@ import java.util.logging.Logger;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.Level;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -58,7 +61,7 @@ public class ProductsPanel extends javax.swing.JPanel {
 
     static {
         try {
-            FileHandler handler = new FileHandler("app.log", 0,1,true);
+            FileHandler handler = new FileHandler("app.log", 0, 1, true);
             handler.setFormatter(new SimpleFormatter());
             loggers.addHandler(handler);
             loggers.setUseParentHandlers(false); // prevent console + duplicate logging
@@ -108,23 +111,54 @@ public class ProductsPanel extends javax.swing.JPanel {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                     boolean isSelected, boolean hasFocus, int row, int column) {
-                JButton btn = new JButton();
-                btn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
-                btn.setForeground(Color.BLACK);
-                btn.setBackground(Color.WHITE);
-                btn.setBorder(null);
-                btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                btn.setFocusPainted(false);
-                return btn;
+
+                JPanel panel = new JPanel();
+                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+                panel.setBackground(Color.WHITE);
+
+                // Edit Button
+                JButton editBtn = new JButton();
+                editBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 20, 20));
+                editBtn.setBackground(Color.WHITE);
+                editBtn.setBorder(null);
+                editBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                editBtn.setFocusPainted(false);
+
+                // Delete Button
+                JButton deleteBtn = new JButton();
+                deleteBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/delete.svg", 20, 20));
+                deleteBtn.setBackground(Color.WHITE);
+                deleteBtn.setBorder(null);
+                deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                deleteBtn.setFocusPainted(false);
+
+                panel.add(editBtn);
+                panel.add(deleteBtn);
+
+                return panel;
             }
         });
 
         actionColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()) {
             JButton button = new JButton();
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+            JButton editBtn = new JButton(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
+            JButton deleteBtn = new JButton(new FlatSVGIcon("lk/jiat/ims/img/delete.svg", 25, 25));
 
             {
-                button.setIcon(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
-                button.addActionListener(e -> {
+                for (JButton btn : new JButton[]{editBtn, deleteBtn}) {
+                    btn.setBackground(Color.WHITE);
+                    btn.setBorder(null);
+                    btn.setFocusPainted(false);
+                    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                }
+
+                panel.setBackground(Color.WHITE);
+                panel.add(editBtn);
+                panel.add(deleteBtn);
+
+                // Edit button action
+                editBtn.addActionListener(e -> {
                     int row = productsTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
                     Object productId = productsTable.getValueAt(row, 0);
@@ -135,12 +169,33 @@ public class ProductsPanel extends javax.swing.JPanel {
                     productDialog.setVisible(true);
                     fireEditingStopped();
                 });
+
+                // Delete button action
+                deleteBtn.addActionListener(e -> {
+                    int row = productsTable.getSelectedRow();
+                    Object productId = productsTable.getValueAt(row, 0);
+
+                    int confirm = JOptionPane.showConfirmDialog(productsTable,
+                            "Are you sure you want to delete product ID " + productId + "?",
+                            "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        loggers.info("Deleted product with ID: " + productId);
+                        try {
+                            ResultSet rs = MySQL.execute("DELETE FROM `products` WHERE `id` = '" + productId + "'");
+                        } catch (SQLException ex) {
+                            loggers.info("User not deleted" + ex);
+                        }
+                    }
+
+                    fireEditingStopped();
+                });
             }
 
             @Override
             public Component getTableCellEditorComponent(JTable table, Object value,
                     boolean isSelected, int row, int column) {
-                return button;
+                return panel;
             }
         });
 
