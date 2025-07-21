@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 import raven.toast.Notifications;
 
 /**
@@ -40,6 +40,7 @@ public class stockUpdateDialog extends javax.swing.JDialog {
                 productName.setText(rs.getString("product_name"));
                 qty.setText(rs.getString("quantity"));
                 price.setText(rs.getString("unit_price"));
+                remarks.setText(rs.getString("remarks"));
             }
 
         } catch (SQLException ex) {
@@ -63,6 +64,8 @@ public class stockUpdateDialog extends javax.swing.JDialog {
         product_id = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         productName = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        remarks = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         qty = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -75,9 +78,8 @@ public class stockUpdateDialog extends javax.swing.JDialog {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Product Stock Updater");
 
-        jPanel2.setLayout(new java.awt.GridLayout(8, 2, 5, 5));
+        jPanel2.setLayout(new java.awt.GridLayout(10, 2, 5, 5));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Product ID");
         jPanel2.add(jLabel2);
@@ -91,6 +93,11 @@ public class stockUpdateDialog extends javax.swing.JDialog {
 
         productName.setEnabled(false);
         jPanel2.add(productName);
+
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("Remarks");
+        jPanel2.add(jLabel6);
+        jPanel2.add(remarks);
 
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Quantity");
@@ -159,7 +166,7 @@ public class stockUpdateDialog extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            ResultSet rs = MySQL.execute("UPDATE products SET products.quantity = '" + qty.getText() + "' "
+            ResultSet rs = MySQL.execute("UPDATE products SET quantity = '" + qty.getText() + "', remarks = '"+remarks.getText()+"' "
                     + "WHERE products.id = '" + id + "'");
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -181,11 +188,13 @@ public class stockUpdateDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField price;
     private javax.swing.JTextField productName;
     private javax.swing.JTextField product_id;
     private javax.swing.JTextField qty;
+    private javax.swing.JTextField remarks;
     // End of variables declaration//GEN-END:variables
 }

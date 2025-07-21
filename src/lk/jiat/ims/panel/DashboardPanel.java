@@ -4,32 +4,17 @@
  */
 package lk.jiat.ims.panel;
 
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import lk.jiat.ims.loggers.CustomLoggers;
 
 /**
  *
  * @author Ayoma
  */
 public class DashboardPanel extends javax.swing.JPanel {
-
-    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
-
-    static {
-        try {
-            FileHandler handler = new FileHandler("app.log", 0,1,true);
-            handler.setFormatter(new SimpleFormatter());
-            loggers.addHandler(handler);
-            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
-        } catch (Exception e) {
-            loggers.log(Level.SEVERE, e.toString());
-        }
-    }
     
     public DashboardPanel() {
         initComponents();
@@ -59,10 +44,10 @@ public class DashboardPanel extends javax.swing.JPanel {
                 stockOutLabel.setText(totalStockOut.getString("total_stockOut_count"));
             }
 
-            loggers.info("Data loaded successfully");
+            CustomLoggers.logger.info("Data loaded successfully");
 
         } catch (SQLException ex) {
-            loggers.log(Level.SEVERE, "Data loading failed", ex);
+            CustomLoggers.logger.log(Level.SEVERE, "Data loading failed", ex);
         }
     }
 

@@ -5,7 +5,6 @@
 package lk.jiat.ims.gui;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.CardLayout;
 import javax.swing.SwingUtilities;
@@ -17,8 +16,6 @@ import lk.jiat.ims.panel.stockPanel;
 import lk.jiat.ims.util.AppIconUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -279,19 +276,6 @@ public class HomeScreen extends javax.swing.JFrame {
         this.contentPanelLayout.show(contentPanel, "user_panel");
     }//GEN-LAST:event_usersBtnActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        FlatIntelliJLaf.setup();
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new HomeScreen(ad).setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;

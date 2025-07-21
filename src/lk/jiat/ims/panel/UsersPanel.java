@@ -13,10 +13,7 @@ import java.awt.Frame;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Vector;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -27,28 +24,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 import lk.jiat.ims.gui.dialog.userRegistrationDialog;
 import lk.jiat.ims.gui.dialog.userUpdateDialog;
+import lk.jiat.ims.loggers.CustomLoggers;
 
 /**
  *
  * @author Ayoma
  */
 public class UsersPanel extends javax.swing.JPanel {
-
-    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
-
-    static {
-        try {
-            FileHandler handler = new FileHandler("app.log", 0, 1, true);
-            handler.setFormatter(new SimpleFormatter());
-            loggers.addHandler(handler);
-            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
-        } catch (Exception e) {
-            loggers.log(Level.SEVERE, e.toString());
-        }
-    }
 
     private String userId;
 
@@ -80,7 +65,7 @@ public class UsersPanel extends javax.swing.JPanel {
 
             }
 
-            loggers.info(" users data loaded successfully into the table");
+            CustomLoggers.logger.info("users data loaded successfully into the table");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,7 +124,7 @@ public class UsersPanel extends javax.swing.JPanel {
                     int row = userTable.getSelectedRow();
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
                     Object userID = userTable.getValueAt(row, 0);
-                    loggers.info("Edited user with ID: " + userID);
+                    CustomLoggers.logger.info("Edited user with ID: " + userID);
 
                     userUpdateDialog dialog = new userUpdateDialog(parentFrame, true, userID);
                     dialog.setVisible(true);
@@ -152,11 +137,11 @@ public class UsersPanel extends javax.swing.JPanel {
                     Object userID = userTable.getValueAt(row, 0);
                     int confirm = JOptionPane.showConfirmDialog(userTable, "Delete user ID " + userID + "?", "Confirm", JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
-                        loggers.info("Deleted user with ID: " + userID);
+                        CustomLoggers.logger.info("Deleted user with ID: " + userID);
                         try {
                             ResultSet rs = MySQL.execute("DELETE FROM `users` WHERE `id` = '" + userID + "'");
                         } catch (SQLException ex) {
-                            loggers.info("User not deleted" + ex);
+                            CustomLoggers.logger.log(Level.SEVERE, "User not deleted: {0}", ex);
                         }
                     }
                     fireEditingStopped();
