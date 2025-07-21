@@ -10,7 +10,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +25,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 import lk.jiat.ims.gui.dialog.productRegistrationDialog;
 import lk.jiat.ims.gui.dialog.productUpdateDialog;
 import net.sf.jasperreports.engine.JRException;
@@ -35,12 +34,10 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
-import java.util.logging.Logger;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import lk.jiat.ims.loggers.CustomLoggers;
 
 /**
  *
@@ -55,19 +52,6 @@ public class ProductsPanel extends javax.swing.JPanel {
         loadTabelData();
         init();
         user = admin;
-    }
-
-    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
-
-    static {
-        try {
-            FileHandler handler = new FileHandler("app.log", 0, 1, true);
-            handler.setFormatter(new SimpleFormatter());
-            loggers.addHandler(handler);
-            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
-        } catch (Exception e) {
-            loggers.log(Level.SEVERE, e.toString());
-        }
     }
 
     private void loadTabelData() {
@@ -96,10 +80,10 @@ public class ProductsPanel extends javax.swing.JPanel {
 
             }
 
-            loggers.info("Loaded product data successfully into the table");
+            CustomLoggers.logger.info("Loaded product data successfully into the table");
 
         } catch (SQLException e) {
-            loggers.log(Level.SEVERE, "Failed to load product data", e);
+            CustomLoggers.logger.log(Level.SEVERE, "Failed to load product data: {0}", e);
         }
     }
 
@@ -163,7 +147,7 @@ public class ProductsPanel extends javax.swing.JPanel {
                     Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
                     Object productId = productsTable.getValueAt(row, 0);
 
-                    loggers.info("Edited product with ID: " + productId);
+                    CustomLoggers.logger.info("Edited product with ID: " + productId);
 
                     productUpdateDialog productDialog = new productUpdateDialog(parentFrame, true, productId);
                     productDialog.setVisible(true);
@@ -180,11 +164,11 @@ public class ProductsPanel extends javax.swing.JPanel {
                             "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
                     if (confirm == JOptionPane.YES_OPTION) {
-                        loggers.info("Deleted product with ID: " + productId);
+                        CustomLoggers.logger.info("Deleted product with ID: " + productId);
                         try {
                             ResultSet rs = MySQL.execute("DELETE FROM `products` WHERE `id` = '" + productId + "'");
                         } catch (SQLException ex) {
-                            loggers.info("User not deleted" + ex);
+                            CustomLoggers.logger.log(Level.SEVERE, "Failed to delete the product : {0}", e);
                         }
                     }
 
@@ -198,6 +182,38 @@ public class ProductsPanel extends javax.swing.JPanel {
                 return panel;
             }
         });
+
+    }
+
+    private void productSearch(String productName) {
+
+        try {
+            ResultSet rs = MySQL.execute("SELECT * FROM products\n"
+                    + "INNER JOIN category ON category.id = products.category_id\n"
+                    + "INNER JOIN suppliers ON suppliers.id = products.suppliers_id\n"
+                    + "INNER JOIN users ON users.id = products.users_id "
+                    + "WHERE `product_name` LIKE '" + productName + "%'");
+
+            DefaultTableModel dtm = (DefaultTableModel) productsTable.getModel();
+            dtm.setRowCount(0);
+
+            while (rs.next()) {
+                Vector v = new Vector();
+                v.add(rs.getString("id"));
+                v.add(rs.getString("product_name"));
+                v.add(rs.getString("quantity"));
+                v.add(rs.getString("unit_price"));
+                v.add(rs.getString("description"));
+                v.add(rs.getString("category_name"));
+                v.add(rs.getString("supplier_name"));
+                v.add(rs.getString("username"));
+
+                dtm.addRow(v);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -216,6 +232,8 @@ public class ProductsPanel extends javax.swing.JPanel {
         productsTable = new javax.swing.JTable();
         addNewProductBtn = new javax.swing.JButton();
         reportBtn = new javax.swing.JButton();
+        searchBar = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -260,6 +278,16 @@ public class ProductsPanel extends javax.swing.JPanel {
             }
         });
 
+        searchBar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                searchBarKeyPressed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Search");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -268,14 +296,18 @@ public class ProductsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(reportBtn))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 194, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(181, 181, 181)
                         .addComponent(addNewProductBtn)))
                 .addContainerGap())
         );
@@ -284,16 +316,24 @@ public class ProductsPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(11, 11, 11)
-                .addComponent(addNewProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(addNewProductBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addComponent(reportBtn))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(reportBtn)))
-                .addContainerGap())
+                        .addGap(6, 6, 6)
+                        .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(6, 6, 6))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -310,7 +350,7 @@ public class ProductsPanel extends javax.swing.JPanel {
 
     private void addNewProductBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewProductBtnActionPerformed
 
-        loggers.info("Add new product button clicked");
+        CustomLoggers.logger.info("Add new product button clicked");
 
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
         productRegistrationDialog productRegistrationDialog = new productRegistrationDialog(parent, true, user);
@@ -319,7 +359,7 @@ public class ProductsPanel extends javax.swing.JPanel {
 
     private void reportBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportBtnActionPerformed
 
-        loggers.info("Report button clicked");
+        CustomLoggers.logger.info("Report button clicked");
 
         try {
             InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/product_report.jasper");
@@ -335,21 +375,28 @@ public class ProductsPanel extends javax.swing.JPanel {
 
             JasperExportManager.exportReportToPdfFile(fileReport, reportFileName);
 
-            loggers.info("Generated and exported report: " + reportFileName);
+            CustomLoggers.logger.info("Generated and exported report successfully: " + reportFileName);
 
         } catch (JRException e) {
-            loggers.log(Level.SEVERE, "Report generation failed", e);
+            CustomLoggers.logger.log(Level.SEVERE, "Report generation failed: {0}", e);
         }
 
     }//GEN-LAST:event_reportBtnActionPerformed
+
+    private void searchBarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyPressed
+        String productName = searchBar.getText();
+        productSearch(productName);
+    }//GEN-LAST:event_searchBarKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNewProductBtn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable productsTable;
     private javax.swing.JButton reportBtn;
+    private javax.swing.JTextField searchBar;
     // End of variables declaration//GEN-END:variables
 }

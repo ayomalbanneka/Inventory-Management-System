@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 
 public class userUpdateDialog extends javax.swing.JDialog {
 

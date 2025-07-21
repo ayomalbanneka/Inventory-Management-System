@@ -4,7 +4,7 @@
  */
 package lk.jiat.ims.gui.dialog;
 
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.logging.FileHandler;

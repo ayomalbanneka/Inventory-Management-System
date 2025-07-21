@@ -1,4 +1,3 @@
-
 package lk.jiat.ims.gui;
 
 import com.formdev.flatlaf.FlatClientProperties;
@@ -11,12 +10,8 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import javax.swing.JOptionPane;
-import lk.jiat.ims.panel.ProductsPanel;
+import lk.jiat.ims.loggers.CustomLoggers;
 import lk.jiat.ims.util.AppIconUtil;
 import lk.jiat.ims.util.validate.Validator;
 
@@ -26,19 +21,6 @@ import lk.jiat.ims.util.validate.Validator;
  */
 public class LoginScreen extends javax.swing.JFrame {
 
-    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
-
-    static {
-        try {
-            FileHandler handler = new FileHandler("app.log", 0,1,true);
-            handler.setFormatter(new SimpleFormatter());
-            loggers.addHandler(handler);
-            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
-        } catch (Exception e) {
-            loggers.log(Level.SEVERE, e.toString());
-        }
-    }
-    
     public LoginScreen() {
         initComponents();
         init();
@@ -54,6 +36,7 @@ public class LoginScreen extends javax.swing.JFrame {
         signInBtn.putClientProperty(FlatClientProperties.STYLE, "arc:999");
 
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -206,8 +189,8 @@ public class LoginScreen extends javax.swing.JFrame {
 
                     new HomeScreen(rs).setVisible(true);
                     LoginScreen.this.dispose();
-                    
-                    loggers.info("Logging success");
+
+                    CustomLoggers.logger.info("Logging success");
 
                 } else if (rs.getInt("status_id") == 3) {
                     Notifications.getInstance().show(
@@ -231,7 +214,7 @@ public class LoginScreen extends javax.swing.JFrame {
             }
 
         } catch (ClassNotFoundException | SQLException e) {
-            loggers.log(Level.SEVERE, "Logging failed", e);
+            CustomLoggers.logger.log(Level.SEVERE, "Logging failed", e);
         }
 
 

@@ -4,7 +4,6 @@
  */
 package lk.jiat.ims.panel;
 
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Frame;
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -15,27 +14,15 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 import lk.jiat.ims.gui.dialog.supplierDialog;
+import lk.jiat.ims.loggers.CustomLoggers;
 
 /**
  *
  * @author Ayoma
  */
 public class SupplierPanel extends javax.swing.JPanel {
-
-    private static final Logger loggers = Logger.getLogger(ProductsPanel.class.getName());
-
-    static {
-        try {
-            FileHandler handler = new FileHandler("app.log", 0,1,true);
-            handler.setFormatter(new SimpleFormatter());
-            loggers.addHandler(handler);
-            loggers.setUseParentHandlers(false); // prevent console + duplicate logging
-        } catch (Exception e) {
-            loggers.log(Level.SEVERE, e.toString());
-        }
-    }
 
     public SupplierPanel() {
         initComponents();
@@ -61,10 +48,10 @@ public class SupplierPanel extends javax.swing.JPanel {
 
             }
 
-            loggers.info("Supplier data loaded successfully into the table");
+            CustomLoggers.logger.info("Loaded product data successfully into the table");
 
         } catch (SQLException ex) {
-            loggers.log(Level.SEVERE, "Failed to load supplier data", ex);
+            CustomLoggers.logger.log(Level.SEVERE, "Failed to load supplier data: {0}", ex);
         }
     }
 
@@ -153,7 +140,7 @@ public class SupplierPanel extends javax.swing.JPanel {
         supplierDialog supplierRegistration = new supplierDialog(parent, true);
         supplierRegistration.setVisible(true);
 
-        loggers.info("Supplier data loaded successfully into the table");
+        CustomLoggers.logger.info("Supplier data loaded successfully into the table");
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

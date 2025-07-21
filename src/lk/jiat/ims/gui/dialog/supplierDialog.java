@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lk.jiat.ims.gui.connection.MySQL;
+import lk.jiat.ims.connection.MySQL;
 import raven.toast.Notifications;
 
 public class supplierDialog extends javax.swing.JDialog {
