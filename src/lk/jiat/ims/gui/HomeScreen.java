@@ -55,7 +55,7 @@ public class HomeScreen extends javax.swing.JFrame {
         this.productPanel = new ProductsPanel(admin);
         this.supplierPanel = new SupplierPanel();
         this.stockPanel = new stockPanel();
-        this.userPanel = new UsersPanel();
+        this.userPanel = new UsersPanel(admin);
         
         this.contentPanel.add(dashboardPanel,"dashboard_panel");
         this.contentPanel.add(productPanel,"product_panel");

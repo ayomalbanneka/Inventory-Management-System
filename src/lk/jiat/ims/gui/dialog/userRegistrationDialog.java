@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import lk.jiat.ims.panel.ProductsPanel;
 import lk.jiat.ims.util.validate.Validator;
+import raven.toast.Notifications;
 
 /**
  *
@@ -62,6 +63,7 @@ public class userRegistrationDialog extends javax.swing.JDialog {
         registerBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("User Registration");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -165,6 +167,13 @@ public class userRegistrationDialog extends javax.swing.JDialog {
         try {
             ResultSet rs = MySQL.execute("INSERT INTO `users` (`username`,`password`,`full_name`,`role`,`status_id`)"
                     + "VALUES('" + Username.getText() + "','" + password + "','" + fullName.getText() + "','" + roleComboBox.getSelectedItem() + "','3')");
+            
+            Notifications.getInstance().show(
+                            Notifications.Type.SUCCESS,
+                            Notifications.Location.TOP_CENTER,
+                            3000,
+                            "User registered successfully");
+            
         } catch (SQLException ex) {
            loggers.info("User not regesitered" + ex);
         }

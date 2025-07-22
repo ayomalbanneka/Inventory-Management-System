@@ -123,10 +123,11 @@ public class productUpdateDialog extends javax.swing.JDialog {
         registerBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Products Details Updater");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Product Update");
+        jLabel1.setText("Product Details Updater");
 
         jPanel2.setLayout(new java.awt.GridLayout(12, 2, 5, 5));
 
@@ -186,7 +187,7 @@ public class productUpdateDialog extends javax.swing.JDialog {
                     .addComponent(jSeparator1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 393, Short.MAX_VALUE))
+                        .addGap(0, 322, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(registerBtn)))

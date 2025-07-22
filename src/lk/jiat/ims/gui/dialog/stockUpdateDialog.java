@@ -73,6 +73,7 @@ public class stockUpdateDialog extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Product Stock Updater");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -176,7 +177,7 @@ public class stockUpdateDialog extends javax.swing.JDialog {
                     Notifications.Type.SUCCESS,
                     Notifications.Location.TOP_CENTER,
                     3000,
-                    "Product Updated Successfully");
+                    "stock Updated Successfully");
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
