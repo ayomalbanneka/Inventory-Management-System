@@ -36,8 +36,10 @@ import lk.jiat.ims.loggers.CustomLoggers;
 public class UsersPanel extends javax.swing.JPanel {
 
     private String userId;
+    ResultSet role;
 
-    public UsersPanel() {
+    public UsersPanel(ResultSet admin) {
+        role = admin;
         initComponents();
         loadTabelData();
         init();
@@ -135,7 +137,7 @@ public class UsersPanel extends javax.swing.JPanel {
                 deleteButton.addActionListener(e -> {
                     int row = userTable.getSelectedRow();
                     Object userID = userTable.getValueAt(row, 0);
-                    int confirm = JOptionPane.showConfirmDialog(userTable, "Delete user ID " + userID + "?", "Confirm", JOptionPane.YES_NO_OPTION);
+                    int confirm = JOptionPane.showConfirmDialog(userTable, "Delete user ID " + userID + "?", "Delete Conformation", JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         CustomLoggers.logger.info("Deleted user with ID: " + userID);
                         try {
@@ -146,6 +148,22 @@ public class UsersPanel extends javax.swing.JPanel {
                     }
                     fireEditingStopped();
                 });
+
+                try {
+                    String admin = role.getString("role");
+                    if ("Admin".equalsIgnoreCase(admin)) {
+                        deleteButton.setEnabled(true);
+                        editButton.setEnabled(true);
+                    } else {
+
+                        deleteButton.setEnabled(false);
+                        editButton.setEnabled(false);
+                        CustomLoggers.logger.warning("Access denied: Non-admin user attempted to delete or edit users details.");
+                    }
+                } catch (SQLException e) {
+                    CustomLoggers.logger.severe("SQLException while checking user role for update or delete user action: " + e.getMessage());
+                }
+
             }
 
             @Override
@@ -154,6 +172,7 @@ public class UsersPanel extends javax.swing.JPanel {
                 return panel;
             }
         });
+
     }
 
     /**
@@ -235,9 +254,20 @@ public class UsersPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        Frame parent = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
-        userRegistrationDialog productRegistrationDialog = new userRegistrationDialog(parent, true);
-        productRegistrationDialog.setVisible(true);
+        try {
+            String admin = role.getString("role");
+            if ("Admin".equalsIgnoreCase(admin)) {
+                CustomLoggers.logger.info("Access granted: Admin user attempting to add a new user.");
+                Frame parent = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
+                userRegistrationDialog dialog = new userRegistrationDialog(parent, true);
+                dialog.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(addBtn, "You don't have access to add users");
+                CustomLoggers.logger.warning("Access denied: Non-admin user attempted to open user registration dialog.");
+            }
+        } catch (SQLException e) {
+            CustomLoggers.logger.severe("SQLException while checking user role for add user action: " + e.getMessage());
+        }
     }//GEN-LAST:event_addBtnActionPerformed
 
 

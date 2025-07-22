@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lk.jiat.ims.connection.MySQL;
+import raven.toast.Notifications;
 
 public class userUpdateDialog extends javax.swing.JDialog {
 
@@ -57,10 +58,11 @@ public class userUpdateDialog extends javax.swing.JDialog {
         registerBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("User Details Updater");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("User Detail Update Dialog");
+        jLabel2.setText("User Details Updater");
 
         jPanel2.setLayout(new java.awt.GridLayout(10, 2, 5, 5));
 
@@ -147,9 +149,7 @@ public class userUpdateDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,6 +169,13 @@ public class userUpdateDialog extends javax.swing.JDialog {
                     + "`username`='" + Username.getText() + "', `full_name`='" + fullName.getText() + "', "
                     + "`role`='" + roleComboBox.getSelectedItem() + "', status_id='" + status.getSelectedIndex() + "' "
                     + "WHERE `id` = '" + id + "'");
+            
+            Notifications.getInstance().show(
+                            Notifications.Type.SUCCESS,
+                            Notifications.Location.TOP_CENTER,
+                            3000,
+                            "User updated successfully");
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
