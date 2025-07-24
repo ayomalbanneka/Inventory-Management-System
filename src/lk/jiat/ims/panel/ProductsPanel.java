@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -155,11 +156,11 @@ public class ProductsPanel extends javax.swing.JPanel {
                 });
 
                 // Delete button action
-                deleteBtn.addActionListener(e -> {
+                deleteBtn.addActionListener((ActionEvent e) -> {
                     int row = productsTable.getSelectedRow();
                     Object productId = productsTable.getValueAt(row, 0);
 
-                    int confirm = JOptionPane.showConfirmDialog(productsTable,
+                    int confirm = JOptionPane.showConfirmDialog(null,
                             "Are you sure you want to delete product ID " + productId + "?",
                             "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
