@@ -4,6 +4,7 @@
  */
 package lk.jiat.ims.util.validate;
 
+import lk.jiat.ims.validate.Validator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

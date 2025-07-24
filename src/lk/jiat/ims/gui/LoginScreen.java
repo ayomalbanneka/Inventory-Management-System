@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import lk.jiat.ims.loggers.CustomLoggers;
 import lk.jiat.ims.util.AppIconUtil;
-import lk.jiat.ims.util.validate.Validator;
+import lk.jiat.ims.validate.Validator;
 
 /**
  *
