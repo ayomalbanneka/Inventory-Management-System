@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package lk.jiat.ims.panel;
+package lk.jiat.ims.gui.panel;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
@@ -38,6 +38,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import lk.jiat.ims.gui.dialog.AddNewCategory;
 import lk.jiat.ims.loggers.CustomLoggers;
 
 /**
@@ -235,6 +236,7 @@ public class ProductsPanel extends javax.swing.JPanel {
         reportBtn = new javax.swing.JButton();
         searchBar = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        addCategory = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -289,6 +291,16 @@ public class ProductsPanel extends javax.swing.JPanel {
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Search");
 
+        addCategory.setBackground(new java.awt.Color(0, 255, 0));
+        addCategory.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addCategory.setForeground(new java.awt.Color(255, 255, 255));
+        addCategory.setText("+ Category");
+        addCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCategoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -309,7 +321,9 @@ public class ProductsPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(reportBtn)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(addCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(reportBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -324,7 +338,9 @@ public class ProductsPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(52, 52, 52)
-                                .addComponent(reportBtn))
+                                .addComponent(reportBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addCategory))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -389,8 +405,15 @@ public class ProductsPanel extends javax.swing.JPanel {
         productSearch(productName);
     }//GEN-LAST:event_searchBarKeyPressed
 
+    private void addCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCategoryActionPerformed
+        Frame parent = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
+        AddNewCategory addNewCategory = new AddNewCategory(parent,true);
+       addNewCategory.setVisible(true);
+    }//GEN-LAST:event_addCategoryActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addCategory;
     private javax.swing.JButton addNewProductBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
