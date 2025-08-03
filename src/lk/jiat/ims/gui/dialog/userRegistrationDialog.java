@@ -11,7 +11,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import lk.jiat.ims.panel.ProductsPanel;
+import lk.jiat.ims.gui.panel.ProductsPanel;
 import lk.jiat.ims.validate.Validator;
 import raven.toast.Notifications;
 

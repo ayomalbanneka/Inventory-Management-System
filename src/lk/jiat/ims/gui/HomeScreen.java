@@ -8,14 +8,15 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.CardLayout;
 import javax.swing.SwingUtilities;
-import lk.jiat.ims.panel.DashboardPanel;
-import lk.jiat.ims.panel.ProductsPanel;
-import lk.jiat.ims.panel.SupplierPanel;
-import lk.jiat.ims.panel.UsersPanel;
-import lk.jiat.ims.panel.stockPanel;
+import lk.jiat.ims.gui.panel.DashboardPanel;
+import lk.jiat.ims.gui.panel.ProductsPanel;
+import lk.jiat.ims.gui.panel.SupplierPanel;
+import lk.jiat.ims.gui.panel.UsersPanel;
+import lk.jiat.ims.gui.panel.stockPanel;
 import lk.jiat.ims.util.AppIconUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import lk.jiat.ims.loggers.CustomLoggers;
 
 /**
  *
@@ -115,6 +116,11 @@ public class HomeScreen extends javax.swing.JFrame {
         signOutBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         signOutBtn.setForeground(new java.awt.Color(255, 255, 255));
         signOutBtn.setText("Sign Out");
+        signOutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signOutBtnActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -275,6 +281,16 @@ public class HomeScreen extends javax.swing.JFrame {
     private void usersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersBtnActionPerformed
         this.contentPanelLayout.show(contentPanel, "user_panel");
     }//GEN-LAST:event_usersBtnActionPerformed
+
+    private void signOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signOutBtnActionPerformed
+       LoginScreen loginScreen = new LoginScreen();
+       loginScreen.setVisible(true);
+       
+       this.dispose();
+       
+        CustomLoggers.logger.info("User logout successfully");
+       
+    }//GEN-LAST:event_signOutBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
