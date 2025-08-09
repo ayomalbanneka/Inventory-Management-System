@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package lk.jiat.ims.gui.dialog;
 
 import java.sql.ResultSet;
@@ -11,10 +7,6 @@ import javax.swing.DefaultComboBoxModel;
 import lk.jiat.ims.connection.MySQL;
 import raven.toast.Notifications;
 
-/**
- *
- * @author Ayoma
- */
 public class productRegistrationDialog extends javax.swing.JDialog {
 
     ResultSet user;

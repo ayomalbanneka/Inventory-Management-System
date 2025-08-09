@@ -15,10 +15,6 @@ import lk.jiat.ims.loggers.CustomLoggers;
 import lk.jiat.ims.util.AppIconUtil;
 import lk.jiat.ims.validate.Validator;
 
-/**
- *
- * @author Ayoma
- */
 public class LoginScreen extends javax.swing.JFrame {
 
     public LoginScreen() {
