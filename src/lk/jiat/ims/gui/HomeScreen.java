@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 import lk.jiat.ims.gui.panel.DashboardPanel;
 import lk.jiat.ims.gui.panel.ProductsPanel;
 import lk.jiat.ims.gui.panel.SupplierPanel;
-import lk.jiat.ims.gui.panel.UsersPanel;
+import lk.jiat.ims.gui.panel.EmployeePanel;
 import lk.jiat.ims.gui.panel.stockPanel;
 import lk.jiat.ims.util.AppIconUtil;
 import java.sql.ResultSet;
@@ -20,7 +20,7 @@ public class HomeScreen extends javax.swing.JFrame {
     private ProductsPanel productPanel;
     private SupplierPanel supplierPanel;
     private stockPanel stockPanel;
-    private UsersPanel userPanel;
+    private EmployeePanel userPanel;
     private CardLayout contentPanelLayout;
 
     public HomeScreen(ResultSet admin) {
@@ -47,7 +47,7 @@ public class HomeScreen extends javax.swing.JFrame {
         this.productPanel = new ProductsPanel(admin);
         this.supplierPanel = new SupplierPanel();
         this.stockPanel = new stockPanel();
-        this.userPanel = new UsersPanel(admin);
+        this.userPanel = new EmployeePanel(admin);
 
         this.contentPanel.add(dashboardPanel, "dashboard_panel");
         this.contentPanel.add(productPanel, "product_panel");
