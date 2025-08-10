@@ -35,12 +35,12 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
-public class UsersPanel extends javax.swing.JPanel {
+public class EmployeePanel extends javax.swing.JPanel {
 
     private String userId;
     ResultSet role;
 
-    public UsersPanel(ResultSet admin) {
+    public EmployeePanel(ResultSet admin) {
         role = admin;
         initComponents();
         loadTabelData();
@@ -128,7 +128,7 @@ public class UsersPanel extends javax.swing.JPanel {
                 // Edit action
                 editButton.addActionListener(e -> {
                     int row = userTable.getSelectedRow();
-                    Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
+                    Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(EmployeePanel.this);
                     Object userID = userTable.getValueAt(row, 0);
                     CustomLoggers.logger.info("Edited user with ID: " + userID);
 
@@ -210,7 +210,7 @@ public class UsersPanel extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("User Management");
+        jLabel1.setText("Employee Management");
 
         addBtn.setBackground(new java.awt.Color(0, 0, 255));
         addBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -273,7 +273,7 @@ public class UsersPanel extends javax.swing.JPanel {
             String admin = role.getString("role");
             if ("Admin".equalsIgnoreCase(admin)) {
                 CustomLoggers.logger.info("Access granted: Admin user attempting to add a new user.");
-                Frame parent = (Frame) SwingUtilities.getWindowAncestor(UsersPanel.this);
+                Frame parent = (Frame) SwingUtilities.getWindowAncestor(EmployeePanel.this);
                 userRegistrationDialog dialog = new userRegistrationDialog(parent, true);
                 dialog.setVisible(true);
             } else {
@@ -290,7 +290,7 @@ public class UsersPanel extends javax.swing.JPanel {
 
             String admin = role.getString("role");
             if ("Admin".equalsIgnoreCase(admin)) {
-                InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/user_report.jasper");
+                InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/employee_report.jasper");
 
                 HashMap<String, Object> parameters = new HashMap<>();
 
