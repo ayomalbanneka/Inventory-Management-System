@@ -234,7 +234,7 @@ public class ProductsPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Name", "Quantity", "Price", "Description", "Category", "Supplier", "User", "Action"
+                "ID", "Name", "Quantity", "Price", "Description", "Category", "Supplier", "Added By", "Action"
             }
         ) {
             boolean[] canEdit = new boolean [] {

@@ -125,7 +125,7 @@
                     <Column editable="false" title="Description" type="java.lang.Object"/>
                     <Column editable="false" title="Category" type="java.lang.Object"/>
                     <Column editable="false" title="Supplier" type="java.lang.Object"/>
-                    <Column editable="false" title="User" type="java.lang.Object"/>
+                    <Column editable="false" title="Added By" type="java.lang.Object"/>
                     <Column editable="true" title="Action" type="java.lang.Object"/>
                   </Table>
                 </Property>

@@ -6,8 +6,12 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.DefaultCellEditor;
@@ -24,6 +28,12 @@ import lk.jiat.ims.connection.MySQL;
 import lk.jiat.ims.gui.dialog.userRegistrationDialog;
 import lk.jiat.ims.gui.dialog.userUpdateDialog;
 import lk.jiat.ims.loggers.CustomLoggers;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class UsersPanel extends javax.swing.JPanel {
 
@@ -66,7 +76,9 @@ public class UsersPanel extends javax.swing.JPanel {
         }
     }
 
-    private void init() {
+    private synchronized void init() {
+
+        reportBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/printer.svg", 20, 20));
 
         TableColumn actionColumn = userTable.getColumn("Action");
         actionColumn.setCellRenderer(new TableCellRenderer() {
@@ -150,6 +162,7 @@ public class UsersPanel extends javax.swing.JPanel {
 
                         deleteButton.setEnabled(false);
                         editButton.setEnabled(false);
+                        JOptionPane.showMessageDialog(null, "You dont have access to edit or delete user details", "Access Denied", JOptionPane.ERROR_MESSAGE);
                         CustomLoggers.logger.warning("Access denied: Non-admin user attempted to delete or edit users details.");
                     }
                 } catch (SQLException e) {
@@ -175,6 +188,7 @@ public class UsersPanel extends javax.swing.JPanel {
         userTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         addBtn = new javax.swing.JButton();
+        reportBtn = new javax.swing.JButton();
 
         userTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -208,6 +222,16 @@ public class UsersPanel extends javax.swing.JPanel {
             }
         });
 
+        reportBtn.setBackground(new java.awt.Color(255, 0, 0));
+        reportBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        reportBtn.setForeground(new java.awt.Color(255, 255, 255));
+        reportBtn.setText("Report");
+        reportBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -216,13 +240,15 @@ public class UsersPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addBtn))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(reportBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                            .addComponent(addBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(6, 6, 6))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,8 +261,10 @@ public class UsersPanel extends javax.swing.JPanel {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
-                        .addComponent(addBtn)))
-                .addGap(0, 22, Short.MAX_VALUE))
+                        .addComponent(addBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(reportBtn)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -249,7 +277,7 @@ public class UsersPanel extends javax.swing.JPanel {
                 userRegistrationDialog dialog = new userRegistrationDialog(parent, true);
                 dialog.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(addBtn, "You don't have access to add users");
+                JOptionPane.showMessageDialog(null, "You don't have access to add users", "Access Denied", JOptionPane.ERROR_MESSAGE);
                 CustomLoggers.logger.warning("Access denied: Non-admin user attempted to open user registration dialog.");
             }
         } catch (SQLException e) {
@@ -257,11 +285,40 @@ public class UsersPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_addBtnActionPerformed
 
+    private void reportBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportBtnActionPerformed
+        try {
+
+            String admin = role.getString("role");
+            if ("Admin".equalsIgnoreCase(admin)) {
+                InputStream filePath = getClass().getClassLoader().getResourceAsStream("reports/user_report.jasper");
+
+                HashMap<String, Object> parameters = new HashMap<>();
+
+                JRTableModelDataSource jrTableModelDataSource = new JRTableModelDataSource(userTable.getModel());
+                JasperPrint fileReport = JasperFillManager.fillReport(filePath, parameters, jrTableModelDataSource);
+                JasperViewer.viewReport(fileReport, false);
+
+                String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String reportFileName = timestamp + "_stock_out_report.pdf";
+
+                JasperExportManager.exportReportToPdfFile(fileReport, reportFileName);
+                CustomLoggers.logger.log(Level.INFO, "Generated and exported report: {0}", reportFileName);
+            } else {
+                JOptionPane.showMessageDialog(null, "You dont have access to print", "Access Denied", JOptionPane.ERROR_MESSAGE);
+                CustomLoggers.logger.warning("Access denied: Non-admin user attempted to open user registration dialog.");
+            }
+
+        } catch (JRException | SQLException e) {
+            CustomLoggers.logger.log(Level.SEVERE, "Report generation failed", e);
+        }
+    }//GEN-LAST:event_reportBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton reportBtn;
     private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
 }

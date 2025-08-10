@@ -38,9 +38,15 @@ public class stockPanel extends javax.swing.JPanel {
 
     public stockPanel() {
         initComponents();
+        init();
         loadStockInTabelData();
         stockIninit();
         stockOutInit();
+    }
+    
+    public void init(){
+        stockInReportBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/printer.svg", 20, 20));
+        stockOutReportBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/printer.svg", 20, 20));
     }
 
     private void stockIninit() {
@@ -367,7 +373,7 @@ public class stockPanel extends javax.swing.JPanel {
             String reportFileName = timestamp + "_stock_out_report.pdf";
 
             JasperExportManager.exportReportToPdfFile(fileReport, reportFileName);
-            CustomLoggers.logger.info("Generated and exported report: " + reportFileName);
+            CustomLoggers.logger.log(Level.INFO, "Generated and exported report: {0}", reportFileName);
 
         } catch (JRException e) {
             CustomLoggers.logger.log(Level.SEVERE, "Report generation failed", e);
