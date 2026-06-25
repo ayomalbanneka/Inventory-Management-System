@@ -153,7 +153,7 @@ public class HomeScreen extends javax.swing.JFrame {
 
         usersBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         usersBtn.setForeground(new java.awt.Color(0, 0, 0));
-        usersBtn.setText("Users");
+        usersBtn.setText("Employees");
         usersBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usersBtnActionPerformed(evt);
