@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import lk.jiat.ims.gui.dialog.AddNewCategory;
+import lk.jiat.ims.gui.dialog.BarcodeDialog;
 import lk.jiat.ims.loggers.CustomLoggers;
 
 public class ProductsPanel extends javax.swing.JPanel {
@@ -110,7 +111,15 @@ public class ProductsPanel extends javax.swing.JPanel {
                 deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 deleteBtn.setFocusPainted(false);
 
+                JButton barcodeBtn = new JButton();
+                barcodeBtn.setIcon(new FlatSVGIcon("lk/jiat/ims/img/barcode.svg", 20, 20));
+                deleteBtn.setBackground(Color.WHITE);
+                deleteBtn.setBorder(null);
+                deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                deleteBtn.setFocusPainted(false);
+
                 panel.add(editBtn);
+                panel.add(barcodeBtn);
                 panel.add(deleteBtn);
 
                 return panel;
@@ -122,9 +131,10 @@ public class ProductsPanel extends javax.swing.JPanel {
             JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             JButton editBtn = new JButton(new FlatSVGIcon("lk/jiat/ims/img/pencil.svg", 25, 25));
             JButton deleteBtn = new JButton(new FlatSVGIcon("lk/jiat/ims/img/delete.svg", 25, 25));
+            JButton barcodeBtn = new JButton(new FlatSVGIcon("lk/jiat/ims/img/barcode.svg", 25, 25));
 
             {
-                for (JButton btn : new JButton[]{editBtn, deleteBtn}) {
+                for (JButton btn : new JButton[]{editBtn, deleteBtn, barcodeBtn}) {
                     btn.setBackground(Color.WHITE);
                     btn.setBorder(null);
                     btn.setFocusPainted(false);
@@ -133,6 +143,7 @@ public class ProductsPanel extends javax.swing.JPanel {
 
                 panel.setBackground(Color.WHITE);
                 panel.add(editBtn);
+                panel.add(barcodeBtn);
                 panel.add(deleteBtn);
 
                 // Edit button action
@@ -145,6 +156,21 @@ public class ProductsPanel extends javax.swing.JPanel {
 
                     productUpdateDialog productDialog = new productUpdateDialog(parentFrame, true, productId);
                     productDialog.setVisible(true);
+                    fireEditingStopped();
+                });
+
+                //barcode button action
+                barcodeBtn.addActionListener(e -> {
+                    int row = productsTable.getSelectedRow();
+                    Object productId = productsTable.getValueAt(row, 0);
+                    Object productName = productsTable.getValueAt(row, 1);
+
+                    Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
+                    BarcodeDialog dialog = new BarcodeDialog(parentFrame,
+                            String.valueOf(productId),
+                            String.valueOf(productName));
+                    dialog.setVisible(true);
+                    CustomLoggers.logger.info("Barcode generated for productId: " + productId);
                     fireEditingStopped();
                 });
 
