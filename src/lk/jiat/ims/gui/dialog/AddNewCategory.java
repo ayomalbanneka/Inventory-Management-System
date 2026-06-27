@@ -95,6 +95,8 @@ public class AddNewCategory extends javax.swing.JDialog {
                     Notifications.Location.TOP_CENTER,
                     3000,
                     "Category added Successfully");
+            
+            dispose();
 
             CustomLoggers.logger.info("Category inserted successfully");
 

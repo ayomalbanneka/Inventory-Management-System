@@ -162,6 +162,8 @@ public class userRegistrationDialog extends javax.swing.JDialog {
                             3000,
                             "User registered successfully");
             
+            dispose();
+            
         } catch (SQLException ex) {
            loggers.info("User not regesitered" + ex);
         }

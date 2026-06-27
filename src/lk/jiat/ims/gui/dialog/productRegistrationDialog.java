@@ -200,6 +200,8 @@ public class productRegistrationDialog extends javax.swing.JDialog {
                     Notifications.Location.TOP_CENTER,
                     3000,
                     "Product Updated Successfully");
+            
+            dispose();
 
         } catch (Exception e) {
             e.printStackTrace();

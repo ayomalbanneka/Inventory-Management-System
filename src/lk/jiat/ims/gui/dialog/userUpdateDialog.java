@@ -176,6 +176,7 @@ public class userUpdateDialog extends javax.swing.JDialog {
                             3000,
                             "User updated successfully");
             
+            dispose();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

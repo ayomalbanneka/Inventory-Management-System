@@ -157,6 +157,7 @@ public class ProductsPanel extends javax.swing.JPanel {
                     productUpdateDialog productDialog = new productUpdateDialog(parentFrame, true, productId);
                     productDialog.setVisible(true);
                     fireEditingStopped();
+                    loadTabelData();
                 });
 
                 //barcode button action
@@ -190,6 +191,7 @@ public class ProductsPanel extends javax.swing.JPanel {
                         } catch (SQLException ex) {
                             CustomLoggers.logger.log(Level.SEVERE, "Failed to delete the product : {0}", e);
                         }
+                        loadTabelData();
                     }
 
                     fireEditingStopped();
@@ -385,6 +387,7 @@ public class ProductsPanel extends javax.swing.JPanel {
         Frame parent = (Frame) SwingUtilities.getWindowAncestor(ProductsPanel.this);
         productRegistrationDialog productRegistrationDialog = new productRegistrationDialog(parent, true, user);
         productRegistrationDialog.setVisible(true);
+        loadTabelData();
     }//GEN-LAST:event_addNewProductBtnActionPerformed
 
     private void reportBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportBtnActionPerformed

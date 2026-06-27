@@ -219,6 +219,8 @@ public class productUpdateDialog extends javax.swing.JDialog {
                     Notifications.Location.TOP_CENTER,
                     3000,
                     "Product Updated Successfully");
+            
+            dispose();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
