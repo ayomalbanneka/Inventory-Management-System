@@ -64,12 +64,8 @@ public class LoginScreen extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Username");
 
-        usernameInput.setText("ayomal111");
-
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Password");
-
-        passwordInput.setText("Ayomal@123");
 
         signInBtn.setBackground(new java.awt.Color(0, 0, 0));
         signInBtn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N

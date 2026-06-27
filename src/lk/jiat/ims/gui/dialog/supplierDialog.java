@@ -144,6 +144,8 @@ public class supplierDialog extends javax.swing.JDialog {
                     3000,
                     "Supplier Registered Successfully");
             
+            dispose();
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

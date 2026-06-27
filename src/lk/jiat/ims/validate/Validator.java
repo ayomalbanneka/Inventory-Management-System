@@ -8,32 +8,28 @@ import javax.swing.JOptionPane;
 
 public class Validator {
 
-    private static final String EMAIL = "^[a-zA-Z0-9_!#$%&amp;'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    private static final String USERNAME = "^[a-zA-Z0-9._]{4,20}$";
     private static final String MOBILE = "^(0{1})(7{1})([0|1|2|4|5|6|7|8]{1})([0-9]{7})";
     private static final String PASSWORD = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
 
-    public static boolean isEmailValid(String value) {
+    public static boolean isUsernameValid(String value) {
         if (value.isBlank()) {
             JOptionPane.showMessageDialog(
                     null,
-                    "Email input cannot be empty",
-                    "Email Validation",
+                    "Username cannot be empty",
+                    "Username Validation",
                     JOptionPane.WARNING_MESSAGE
             );
-
             return false;
-        } else if (!value.matches(EMAIL)) {
-
+        } else if (!value.matches(USERNAME)) {
             JOptionPane.showMessageDialog(
                     null,
-                    "Enter a valid email address",
-                    "Email Validation",
+                    "Username must be 4–20 characters (letters, numbers, _ or . only)",
+                    "Username Validation",
                     JOptionPane.WARNING_MESSAGE
             );
-
             return false;
         }
-
         return true;
     }
 

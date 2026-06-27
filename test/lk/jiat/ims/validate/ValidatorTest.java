@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit4TestClass.java to edit this template
- */
 package lk.jiat.ims.validate;
 
 import org.junit.After;
@@ -11,71 +7,69 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Ayomal Kaushalya
- */
 public class ValidatorTest {
-    
+
     public ValidatorTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
-    /**
-     * Test of isEmailValid method, of class Validator.
-     */
+    // ── Username Tests ──────────────────────────────────────────────────────
+
     @Test
-    public void testIsEmailValid() {
-        System.out.println("isEmailValid");
-        String value = "";
-        boolean expResult = false;
-        boolean result = Validator.isEmailValid(value);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testIsUsernameValid_emptyInput() {
+        // Empty string should fail validation
+        boolean result = Validator.isUsernameValid("");
+        assertFalse(result);
     }
 
-    /**
-     * Test of isMobielValid method, of class Validator.
-     */
     @Test
-    public void testIsMobielValid() {
-        System.out.println("isMobielValid");
-        String value = "";
-        boolean expResult = false;
-        boolean result = Validator.isMobielValid(value);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testIsUsernameValid_validUsername() {
+        // Valid username should pass
+        boolean result = Validator.isUsernameValid("ayomal111");
+        assertTrue(result);
     }
 
-    /**
-     * Test of isPasswordValid method, of class Validator.
-     */
     @Test
-    public void testIsPasswordValid() {
-        System.out.println("isPasswordValid");
-        String value = "";
-        boolean expResult = false;
-        boolean result = Validator.isPasswordValid(value);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testIsUsernameValid_tooShort() {
+        // Less than 4 characters should fail
+        boolean result = Validator.isUsernameValid("ab");
+        assertFalse(result);
     }
-    
+
+    @Test
+    public void testIsUsernameValid_specialCharsNotAllowed() {
+        // Special characters like @ should fail
+        boolean result = Validator.isUsernameValid("user@123");
+        assertFalse(result);
+    }
+
+    // ── Mobile Tests ─────────────────────────────────────────────────────────
+
+    @Test
+    public void testIsMobielValid_emptyInput() {
+        boolean result = Validator.isMobielValid("");
+        assertFalse(result);
+    }
+
+    @Test
+    public void testIsMobielValid_validNumber() {
+        boolean result = Validator.isMobielValid("0771234567");
+        assertTrue(result);
+    }
+
 }

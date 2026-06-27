@@ -58,11 +58,11 @@ public class userUpdateDialog extends javax.swing.JDialog {
         registerBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("User Details Updater");
+        setTitle("Employee Details Updater");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("User Details Updater");
+        jLabel2.setText("Employee Details Updater");
 
         jPanel2.setLayout(new java.awt.GridLayout(10, 2, 5, 5));
 
@@ -176,6 +176,7 @@ public class userUpdateDialog extends javax.swing.JDialog {
                             3000,
                             "User updated successfully");
             
+            dispose();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

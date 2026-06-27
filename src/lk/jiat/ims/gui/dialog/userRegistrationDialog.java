@@ -51,11 +51,11 @@ public class userRegistrationDialog extends javax.swing.JDialog {
         registerBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("User Registration");
+        setTitle("Employee Registration");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("User Registration");
+        jLabel2.setText("Employee Registration");
 
         jPanel2.setLayout(new java.awt.GridLayout(8, 2, 5, 5));
 
@@ -108,7 +108,7 @@ public class userRegistrationDialog extends javax.swing.JDialog {
                     .addComponent(jSeparator1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(0, 354, Short.MAX_VALUE))
+                        .addGap(0, 309, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -161,6 +161,8 @@ public class userRegistrationDialog extends javax.swing.JDialog {
                             Notifications.Location.TOP_CENTER,
                             3000,
                             "User registered successfully");
+            
+            dispose();
             
         } catch (SQLException ex) {
            loggers.info("User not regesitered" + ex);

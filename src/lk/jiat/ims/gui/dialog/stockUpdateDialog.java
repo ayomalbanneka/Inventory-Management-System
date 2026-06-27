@@ -159,6 +159,7 @@ public class stockUpdateDialog extends javax.swing.JDialog {
                     + "WHERE products.id = '" + id + "'");
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return;
         }
 
             Notifications.getInstance().show(
@@ -166,6 +167,7 @@ public class stockUpdateDialog extends javax.swing.JDialog {
                     Notifications.Location.TOP_CENTER,
                     3000,
                     "stock Updated Successfully");
+            dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

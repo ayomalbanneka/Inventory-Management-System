@@ -135,6 +135,7 @@ public class EmployeePanel extends javax.swing.JPanel {
                     userUpdateDialog dialog = new userUpdateDialog(parentFrame, true, userID);
                     dialog.setVisible(true);
                     fireEditingStopped();
+                    loadTabelData();
                 });
 
                 // Delete action
@@ -149,6 +150,7 @@ public class EmployeePanel extends javax.swing.JPanel {
                         } catch (SQLException ex) {
                             CustomLoggers.logger.log(Level.SEVERE, "User not deleted: {0}", ex);
                         }
+                        loadTabelData();
                     }
                     fireEditingStopped();
                 });
